@@ -1,12 +1,13 @@
 #pragma once
 
 #include "defines.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 
 typedef struct {
-    uint32_t top;
-    uint8_t bits[MAX_CODE_SIZE];
+	uint32_t top;
+	uint8_t bits[MAX_CODE_SIZE];
 } Code;
 
 Code code_init(void);

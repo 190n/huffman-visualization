@@ -5,10 +5,10 @@
 typedef struct Node Node;
 
 struct Node {
-    Node *left;
-    Node *right;
-    uint8_t symbol;
-    uint64_t frequency;
+	Node *left;
+	Node *right;
+	uint8_t symbol;
+	uint64_t frequency;
 };
 
 Node *node_create(uint8_t symbol, uint64_t frequency);

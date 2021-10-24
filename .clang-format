@@ -1,18 +1,20 @@
 ---
 BasedOnStyle: WebKit
 IndentWidth: 4
+TabWidth: 4
+UseTab: AlignWithSpaces
 ---
 Language: Cpp
 AlignConsecutiveMacros: true
 AlignEscapedNewlines: Right
 AlignOperands: true
 AllowShortBlocksOnASingleLine: Never
-AllowShortCaseLabelsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: Never
 ColumnLimit: 100
 IncludeBlocks: Regroup
-IndentCaseLabels: false
+IndentCaseLabels: true
 IndentWrappedFunctionNames: true
 PointerAlignment: Right
 ReflowComments: false

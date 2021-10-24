@@ -1,4 +1,6 @@
 const escapeSequences: Record<number, string> = {
+	// audible bell
+	7: `'\\a'`,
 	// backspace
 	8: `'\\b'`,
 	// tab
@@ -15,8 +17,6 @@ const escapeSequences: Record<number, string> = {
 	39: `'\\''`,
 	// backslash
 	92: `'\\\\'`,
-	// audible bell
-	97: `'\\a'`,
 };
 
 export function characterDisplay(byte: number): string {

@@ -65,6 +65,10 @@ section {
 				font-family: monospace;
 				text-align: right;
 				padding: 4px 8px;
+
+				&:nth-child(1) {
+					border-right: thin solid black;
+				}
 			}
 		}
 	}

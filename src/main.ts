@@ -11,11 +11,12 @@ let HistogramWorker: (typeof import('./histogram-worker?worker').default) | unde
 		buildHistogram = (await import('./histogram')).buildHistogram;
 	}
 
-	const input = document.getElementById('input') as HTMLTextAreaElement;
+	const input = document.getElementById('input') as HTMLTextAreaElement,
+		tbody = document.getElementById('histogram')!;
 
 	let worker: Worker|null = null;
 
-	function handleInput() {
+	function handleInput(tdWidth: number) {
 		if (worker) {
 			console.log('terminating worker');
 			worker.terminate();
@@ -26,7 +27,7 @@ let HistogramWorker: (typeof import('./histogram-worker?worker').default) | unde
 			worker = new HistogramWorker!();
 			worker.addEventListener('message', e => {
 				if (e.data instanceof Map) {
-					displayHistogram(document.getElementById('histogram')!, e.data);
+					displayHistogram(e.data, tbody, tdWidth);
 				}
 				if (worker) {
 					worker.terminate();
@@ -35,11 +36,20 @@ let HistogramWorker: (typeof import('./histogram-worker?worker').default) | unde
 			});
 			worker.postMessage(input.value);
 		} else {
-			displayHistogram(document.getElementById('histogram')!, buildHistogram!(input.value));
+			displayHistogram(buildHistogram!(input.value), tbody, tdWidth);
 		}
 	}
 
-	input.addEventListener('input', handleInput, false);
+	const tr = document.createElement('tr'),
+		td1 = document.createElement('td'),
+		td2 = document.createElement('td');
 
-	handleInput();
+	tr.appendChild(td1);
+	tr.appendChild(td2);
+	tbody.appendChild(tr);
+	const tdWidth = td1.getClientRects()[0].width;
+
+	input.addEventListener('input', () => handleInput(tdWidth), false);
+
+	handleInput(tdWidth);
 })();

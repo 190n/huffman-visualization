@@ -2,8 +2,6 @@ import utf8 from 'utf8';
 
 import { characterDisplay } from './util';
 
-const TD_WIDTH = 144;
-
 export function buildHistogram(input: string): Map<number, number> {
 	const encoded = utf8.encode(input),
 		histogram = new Map<number, number>();
@@ -22,7 +20,7 @@ export function buildHistogram(input: string): Map<number, number> {
 	return histogram;
 }
 
-export function displayHistogram(tbody: Element, histogram: Map<number, number>) {
+export function displayHistogram(histogram: Map<number, number>, tbody: Element, tdWidth: number) {
 	// remove all current contents
 	tbody.replaceChildren();
 	const sortedKeys = [...histogram.keys()].sort((a, b) => histogram.get(b)! - histogram.get(a)!);
@@ -38,7 +36,7 @@ export function displayHistogram(tbody: Element, histogram: Map<number, number>)
 
 		occurrences.textContent = histogram.get(byte)!.toString();
 		const fraction = histogram.get(byte)! / histogram.get(sortedKeys[0])!;
-		occurrences.style.boxShadow = `-${fraction * TD_WIDTH}px 0 0 #0000ff40 inset`;
+		occurrences.style.boxShadow = `-${fraction * tdWidth}px 0 0 #0000ff40 inset`;
 		tbody.appendChild(tr);
 	}
 }

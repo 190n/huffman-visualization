@@ -40,6 +40,8 @@ section {
 	padding: 0;
 	height: 100%;
 	overflow-y: scroll;
+	display: flex;
+	flex-direction: column;
 
 	table {
 		width: 100%;
@@ -71,6 +73,13 @@ section {
 				}
 			}
 		}
+	}
+
+	#dummy-border {
+		width: calc(50% + 0.5px);
+		box-sizing: border-box;
+		border-right: thin solid black;
+		flex-grow: 1;
 	}
 }
 

@@ -2,7 +2,7 @@ import utf8 from 'utf8';
 
 const input = document.getElementById('input') as HTMLTextAreaElement;
 
-input.addEventListener('input', () => {
+function buildHistogram(): Map<number, number> {
 	const encoded = utf8.encode(input.value),
 		histogram = new Map<number, number>();
 	histogram.set(0, 1);
@@ -17,6 +17,10 @@ input.addEventListener('input', () => {
 		}
 	}
 
+	return histogram;
+}
+
+function displayHistogram(histogram: Map<number, number>) {
 	const tbody = document.getElementById('histogram')!;
 	tbody.replaceChildren();
 	const sortedKeys = [...histogram.keys()].sort((a, b) => histogram.get(b)! - histogram.get(a)!);
@@ -39,4 +43,13 @@ input.addEventListener('input', () => {
 		occurrences.textContent = histogram.get(byte)!.toString();
 		tbody.appendChild(tr);
 	}
-}, false);
+}
+
+function handleInput() {
+	const histogram = buildHistogram();
+	displayHistogram(histogram);
+}
+
+input.addEventListener('input', handleInput, false);
+
+handleInput();

@@ -1,6 +1,8 @@
 import utf8 from 'utf8';
 
-const TD_WIDTH = 148;
+import { characterDisplay } from './util';
+
+const TD_WIDTH = 144;
 
 export function buildHistogram(input: string): Map<number, number> {
 	const encoded = utf8.encode(input),
@@ -32,14 +34,7 @@ export function displayHistogram(tbody: Element, histogram: Map<number, number>)
 		tr.appendChild(char);
 		tr.appendChild(occurrences);
 
-		if (0x20 <= byte && byte <= 0x7e) {
-			// printable character
-			char.textContent = `'${String.fromCharCode(byte)}'`;
-		} else if (byte < 0x10) {
-			char.textContent = `0x0${byte.toString(16)}`;
-		} else {
-			char.textContent = `0x${byte.toString(16)}`;
-		}
+		char.textContent = characterDisplay(byte);
 
 		occurrences.textContent = histogram.get(byte)!.toString();
 		const fraction = histogram.get(byte)! / histogram.get(sortedKeys[0])!;

@@ -1,13 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="/src/styles.scss">
+		<title>Vite App</title>
+	</head>
+	<body>
+		<main id="app">
+			<section id="input-section">
+				<h1>Input data:</h1>
+				<pre contenteditable id="input">hello</pre>
+			</section>
+			<section id="histogram-section">
+				histogram
+			</section>
+			<section id="pq-section"></section>
+			<section id="huffman-section"></section>
+		</main>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
 </html>

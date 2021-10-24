@@ -1,5 +1,7 @@
 import utf8 from 'utf8';
 
+const TD_WIDTH = 148;
+
 const input = document.getElementById('input') as HTMLTextAreaElement;
 
 function buildHistogram(): Map<number, number> {
@@ -22,6 +24,7 @@ function buildHistogram(): Map<number, number> {
 
 function displayHistogram(histogram: Map<number, number>) {
 	const tbody = document.getElementById('histogram')!;
+	// remove all current contents
 	tbody.replaceChildren();
 	const sortedKeys = [...histogram.keys()].sort((a, b) => histogram.get(b)! - histogram.get(a)!);
 	for (const byte of sortedKeys) {
@@ -40,7 +43,10 @@ function displayHistogram(histogram: Map<number, number>) {
 		} else {
 			char.textContent = `0x${byte.toString(16)}`;
 		}
+
 		occurrences.textContent = histogram.get(byte)!.toString();
+		const fraction = histogram.get(byte)! / histogram.get(sortedKeys[0])!;
+		occurrences.style.boxShadow = `-${fraction * TD_WIDTH}px 0 0 #0000ff40 inset`;
 		tbody.appendChild(tr);
 	}
 }

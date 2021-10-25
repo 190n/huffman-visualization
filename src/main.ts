@@ -1,62 +1,22 @@
-import { displayHistogram } from './histogram';
+import { buildHistogram, displayHistogram } from './histogram';
+import './huffman';
 
-import init from './c/huffman.wasm';
+const input = document.getElementById('input') as HTMLTextAreaElement,
+	tbody = document.getElementById('histogram')!;
 
-// vite.js uses module workers in development which firefox doesn't support
-let HistogramWorker: (typeof import('./histogram-worker?worker').default) | undefined,
-	buildHistogram: (typeof import('./histogram').buildHistogram) | undefined;
+function handleInput(tdWidth: number) {
+	displayHistogram(buildHistogram!(input.value), tbody, tdWidth);
+}
 
-(async () => {
-	if (import.meta.env.PROD) {
-		HistogramWorker = (await import('./histogram-worker?worker')).default;
-	} else {
-		buildHistogram = (await import('./histogram')).buildHistogram;
-	}
+const tr = document.createElement('tr'),
+	td1 = document.createElement('td'),
+	td2 = document.createElement('td');
 
-	const input = document.getElementById('input') as HTMLTextAreaElement,
-		tbody = document.getElementById('histogram')!;
+tr.appendChild(td1);
+tr.appendChild(td2);
+tbody.appendChild(tr);
+const tdWidth = td1.getClientRects()[0].width;
 
-	let worker: Worker|null = null;
+input.addEventListener('input', () => handleInput(tdWidth), false);
 
-	function handleInput(tdWidth: number) {
-		if (worker) {
-			console.log('terminating worker');
-			worker.terminate();
-		}
-
-		if (import.meta.env.PROD) {
-			console.log('using worker');
-			worker = new HistogramWorker!();
-			worker.addEventListener('message', e => {
-				if (e.data instanceof Map) {
-					displayHistogram(e.data, tbody, tdWidth);
-				}
-				if (worker) {
-					worker.terminate();
-					worker = null;
-				}
-			});
-			worker.postMessage(input.value);
-		} else {
-			displayHistogram(buildHistogram!(input.value), tbody, tdWidth);
-		}
-	}
-
-	const tr = document.createElement('tr'),
-		td1 = document.createElement('td'),
-		td2 = document.createElement('td');
-
-	tr.appendChild(td1);
-	tr.appendChild(td2);
-	tbody.appendChild(tr);
-	const tdWidth = td1.getClientRects()[0].width;
-
-	input.addEventListener('input', () => handleInput(tdWidth), false);
-
-	handleInput(tdWidth);
-
-	const exports = await init({ imports: {} });
-	console.log(exports);
-	const ptr = exports.calloc(256);
-	console.log(ptr);
-})();
+handleInput(tdWidth);

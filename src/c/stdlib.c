@@ -1,4 +1,4 @@
-// bump allocator by Surma from https://surma.dev/things/c-to-webassembly/
+// malloc and free are by Surma from https://surma.dev/things/c-to-webassembly/
 // CC BY 4.0
 
 #include <malloc.h>
@@ -10,7 +10,7 @@ extern unsigned char __heap_base;
 
 unsigned long bump_pointer = (unsigned long) &__heap_base;
 
-export void *malloc(unsigned long n) {
+export void *malloc(size_t n) {
 	unsigned long r = bump_pointer;
 	bump_pointer += n;
 	return (void *) r;

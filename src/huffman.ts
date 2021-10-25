@@ -1,5 +1,6 @@
 import init from './c/huffman.wasm';
 import { unmarshalNode, Node } from './node';
+import { characterDisplay } from './util';
 
 interface HuffmanExports {
 	memory: WebAssembly.Memory;
@@ -53,38 +54,57 @@ export function getNodeX(path: Path): number {
 	return x;
 }
 
-export function* inOrderTraverse(root: Node, basePath: Path = []): Generator<[Node, Path]> {
+export function* postOrderTraverse(root: Node, basePath: Path = []): Generator<[Node, Path]> {
 	if (root.left) {
-		yield* inOrderTraverse(root.left, [...basePath, 0]);
+		yield* postOrderTraverse(root.left, [...basePath, 0]);
+	}
+	if (root.right) {
+		yield* postOrderTraverse(root.right, [...basePath, 1]);
 	}
 	yield [root, basePath];
-	if (root.right) {
-		yield* inOrderTraverse(root.right, [...basePath, 1]);
-	}
+}
+
+export function getNodeXY(path: Path, width: number, levelHeight: number, xPad: number, yPad: number): [number, number] {
+	return [getNodeX(path) * (width - xPad * 2) + xPad, path.length * levelHeight + yPad];
 }
 
 export function drawTree(ctx: CanvasRenderingContext2D, root: Node) {
-	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-	const levelHeight = Math.min((ctx.canvas.height - 10) / (getTreeDepth(root) - 1), 80);
+	const xPad = 28, yPad = 20;
 
-	for (const [_, path] of inOrderTraverse(root)) {
-		const x = getNodeX(path) * (ctx.canvas.width - 10) + 5,
-			y = path.length * levelHeight + 5;
-		ctx.beginPath();
-		ctx.arc(x, y, 5, 0, 2 * Math.PI);
-		ctx.fill();
-		ctx.closePath();
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	const levelHeight = Math.min((ctx.canvas.height - yPad * 2) / (getTreeDepth(root) - 1), 80);
+
+	for (const [node, path] of postOrderTraverse(root)) {
+		const [x, y] = getNodeXY(path, ctx.canvas.width, levelHeight, xPad, yPad);
 
 		if (path.length > 0) {
 			const parentPath = path.slice(0, -1),
-				parentX = getNodeX(parentPath) * (ctx.canvas.width - 10) + 5,
-				parentY = parentPath.length * levelHeight + 5;
+				[parentX, parentY] = getNodeXY(parentPath, ctx.canvas.width, levelHeight, xPad, yPad);
 
 			ctx.beginPath();
 			ctx.moveTo(parentX, parentY);
 			ctx.lineTo(x, y);
 			ctx.stroke();
 			ctx.closePath();
+		}
+
+		ctx.beginPath();
+		ctx.fillStyle = 'white';
+		ctx.rect(x - xPad, y - yPad, xPad * 2, yPad * 2);
+		ctx.fill();
+		ctx.stroke();
+		ctx.closePath();
+
+		ctx.fillStyle = 'black';
+		ctx.font = '16px monospace';
+		ctx.textBaseline = 'middle';
+		ctx.textAlign = 'center';
+
+		if (node.left || node.right) {
+			ctx.fillText(node.frequency.toString(), x, y);
+		} else {
+			ctx.fillText(characterDisplay(node.symbol), x, y - 8);
+			ctx.fillText(node.frequency.toString(), x, y + 8);
 		}
 	}
 }

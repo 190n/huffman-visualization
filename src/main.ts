@@ -15,7 +15,7 @@ async function handleInput(tdWidth: number) {
 	canvas.width = canvas.parentElement!.clientWidth;
 	canvas.height = canvas.parentElement!.clientHeight;
 
-	drawTree(ctx, tree);
+	drawTree(ctx, tree, { frequency: 5, symbol: 98 });
 }
 
 const tr = document.createElement('tr'),

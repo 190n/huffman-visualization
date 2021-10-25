@@ -8,10 +8,10 @@ struct Node {
 	Node *left;
 	Node *right;
 	uint8_t symbol;
-	uint64_t frequency;
+	uint32_t frequency;
 };
 
-Node *node_create(uint8_t symbol, uint64_t frequency);
+Node *node_create(uint8_t symbol, uint32_t frequency);
 
 void node_delete(Node **n);
 

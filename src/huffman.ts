@@ -70,10 +70,17 @@ export function getNodeXY(path: Path, width: number, levelHeight: number): [numb
 	return [getNodeX(path) * (width - X_PAD * 2) + X_PAD, path.length * levelHeight + Y_PAD];
 }
 
-export function drawNode(ctx: CanvasRenderingContext2D, node: Node, path: Path, levelHeight: number, bgColor: string = 'white') {
+export function drawNode(
+	ctx: CanvasRenderingContext2D,
+	node: Node,
+	path: Path,
+	levelHeight: number,
+	drawConnection: boolean = true,
+	bgColor: string = 'white',
+) {
 	const [x, y] = getNodeXY(path, ctx.canvas.width, levelHeight);
 
-	if (path.length > 0) {
+	if (path.length > 0 && drawConnection) {
 		const parentPath = path.slice(0, -1),
 			[parentX, parentY] = getNodeXY(parentPath, ctx.canvas.width, levelHeight);
 
@@ -115,12 +122,12 @@ export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: 
 		if (node.symbol == highlight?.symbol) {
 			deferredNode = node;
 			deferredPath = path;
-		} else {
-			drawNode(ctx, node, path, levelHeight);
 		}
+
+		drawNode(ctx, node, path, levelHeight);
 	}
 
 	if (deferredNode && deferredPath) {
-		drawNode(ctx, deferredNode, deferredPath, levelHeight, 'lime');
+		drawNode(ctx, deferredNode, deferredPath, levelHeight, false, 'lime');
 	}
 }

@@ -39,13 +39,14 @@ export function getTreeDepth(root: Node): number {
 export function getNodeX(path: Path): number {
 	let x = 0.5;
 	for (const i in path) {
-		const step = path[i];
+		const step = path[i],
+			change = 2 ** (-i - 2);
 		if (step == 0) {
 			// left
-			x -= 2 ** (-i - 2);
+			x -= change;
 		} else {
 			// right
-			x += 2 ** (-i - 2);
+			x += change;
 		}
 	}
 

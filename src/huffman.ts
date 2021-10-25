@@ -8,6 +8,8 @@ interface HuffmanExports {
 	calloc: (n: number, size: number) => number;
 }
 
+export type Path = (0|1)[];
+
 export async function buildTree(hist: Map<number, number>): Promise<Node> {
 	const exports = await init({ imports: {} }) as unknown as HuffmanExports;
 	// allocate array to store histogram (256x uint32_t)
@@ -31,5 +33,31 @@ export function getTreeDepth(root: Node): number {
 		return 1 + getTreeDepth(root.right);
 	} else {
 		return 1;
+	}
+}
+
+export function getNodeX(path: Path): number {
+	let x = 0.5;
+	for (const i in path) {
+		const step = path[i];
+		if (step == 0) {
+			// left
+			x -= 2 ** (-i - 2);
+		} else {
+			// right
+			x += 2 ** (-i - 2);
+		}
+	}
+
+	return x;
+}
+
+export function* inOrderTraverse(root: Node, basePath: Path = []): Generator<[Node, Path]> {
+	if (root.left) {
+		yield* inOrderTraverse(root.left, [...basePath, 0]);
+	}
+	yield [root, basePath];
+	if (root.right) {
+		yield* inOrderTraverse(root.right, [...basePath, 1]);
 	}
 }

@@ -91,7 +91,9 @@ section {
 
 #huffman-section {
 	grid-column: 3;
-	grid-row: 2;
+	grid-row: 1 / 3;
+	padding: 0;
+	overflow: hidden;
 }
 
 #input {

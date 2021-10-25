@@ -57,10 +57,16 @@ section {
 		tbody {
 			tr:nth-child(odd) {
 				background-color: #e0e0e0;
+				&:hover {
+					background-color: #b0b0b0;
+				}
 			}
 
 			tr:nth-child(even) {
 				background-color: white;
+				&:hover {
+					background-color: #d0d0d0;
+				}
 			}
 
 			td {

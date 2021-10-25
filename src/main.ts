@@ -1,5 +1,5 @@
 import { buildHistogram, displayHistogram } from './histogram';
-import { buildTree, getTreeDepth, getNodeX, inOrderTraverse } from './huffman';
+import { buildTree, drawTree } from './huffman';
 
 const input = document.getElementById('input') as HTMLTextAreaElement,
 	tbody = document.getElementById('histogram')!;
@@ -15,29 +15,7 @@ async function handleInput(tdWidth: number) {
 	canvas.width = canvas.parentElement!.clientWidth;
 	canvas.height = canvas.parentElement!.clientHeight;
 
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	const levelHeight = Math.min((canvas.height - 10) / (getTreeDepth(tree) - 1), 80);
-
-	for (const [_, path] of inOrderTraverse(tree)) {
-		const x = getNodeX(path) * (canvas.width - 10) + 5,
-			y = path.length * levelHeight + 5;
-		ctx.beginPath();
-		ctx.arc(x, y, 5, 0, 2 * Math.PI);
-		ctx.fill();
-		ctx.closePath();
-
-		if (path.length > 0) {
-			const parentPath = path.slice(0, -1),
-				parentX = getNodeX(parentPath) * (canvas.width - 10) + 5,
-				parentY = parentPath.length * levelHeight + 5;
-
-			ctx.beginPath();
-			ctx.moveTo(parentX, parentY);
-			ctx.lineTo(x, y);
-			ctx.stroke();
-			ctx.closePath();
-		}
-	}
+	drawTree(ctx, tree);
 }
 
 const tr = document.createElement('tr'),

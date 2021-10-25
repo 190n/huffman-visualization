@@ -62,3 +62,29 @@ export function* inOrderTraverse(root: Node, basePath: Path = []): Generator<[No
 		yield* inOrderTraverse(root.right, [...basePath, 1]);
 	}
 }
+
+export function drawTree(ctx: CanvasRenderingContext2D, root: Node) {
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	const levelHeight = Math.min((ctx.canvas.height - 10) / (getTreeDepth(root) - 1), 80);
+
+	for (const [_, path] of inOrderTraverse(root)) {
+		const x = getNodeX(path) * (ctx.canvas.width - 10) + 5,
+			y = path.length * levelHeight + 5;
+		ctx.beginPath();
+		ctx.arc(x, y, 5, 0, 2 * Math.PI);
+		ctx.fill();
+		ctx.closePath();
+
+		if (path.length > 0) {
+			const parentPath = path.slice(0, -1),
+				parentX = getNodeX(parentPath) * (ctx.canvas.width - 10) + 5,
+				parentY = parentPath.length * levelHeight + 5;
+
+			ctx.beginPath();
+			ctx.moveTo(parentX, parentY);
+			ctx.lineTo(x, y);
+			ctx.stroke();
+			ctx.closePath();
+		}
+	}
+}

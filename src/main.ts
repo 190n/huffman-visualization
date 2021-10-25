@@ -1,11 +1,15 @@
 import { buildHistogram, displayHistogram } from './histogram';
-import './huffman';
+import { buildTree, getTreeDepth } from './huffman';
 
 const input = document.getElementById('input') as HTMLTextAreaElement,
 	tbody = document.getElementById('histogram')!;
 
-function handleInput(tdWidth: number) {
-	displayHistogram(buildHistogram!(input.value), tbody, tdWidth);
+async function handleInput(tdWidth: number) {
+	const hist = buildHistogram(input.value);
+	displayHistogram(hist, tbody, tdWidth);
+	const tree = await buildTree(hist);
+	console.log(tree);
+	console.log(getTreeDepth(tree));
 }
 
 const tr = document.createElement('tr'),

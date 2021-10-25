@@ -1,6 +1,6 @@
 CC     = clang
 CFLAGS = -Wall -Wextra -Werror -Wpedantic --target=wasm32 -O3 -flto -nostdlib -I/usr/include
-LFLAGS = --no-entry --export-all --lto-O3
+LFLAGS = --no-entry --export-dynamic --lto-O3
 LD     = wasm-ld
 OBJS   = huffman.o node.o pq.o stdlib.o
 

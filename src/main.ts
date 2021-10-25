@@ -1,5 +1,7 @@
 import { displayHistogram } from './histogram';
 
+import init from './c/huffman.wasm';
+
 // vite.js uses module workers in development which firefox doesn't support
 let HistogramWorker: (typeof import('./histogram-worker?worker').default) | undefined,
 	buildHistogram: (typeof import('./histogram').buildHistogram) | undefined;
@@ -52,4 +54,9 @@ let HistogramWorker: (typeof import('./histogram-worker?worker').default) | unde
 	input.addEventListener('input', () => handleInput(tdWidth), false);
 
 	handleInput(tdWidth);
+
+	const exports = await init({ imports: {} });
+	console.log(exports);
+	const ptr = exports.calloc(256);
+	console.log(ptr);
 })();

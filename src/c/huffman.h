@@ -6,8 +6,6 @@
 
 #include <stdint.h>
 
-Node *build_tree(uint32_t hist[static ALPHABET]);
-
-void delete_tree(Node **root);
+export Node *build_tree(uint32_t hist[static ALPHABET]);
 
 #endif

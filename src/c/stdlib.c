@@ -4,11 +4,13 @@
 #include <malloc.h>
 #include <string.h>
 
+#include "defines.h"
+
 extern unsigned char __heap_base;
 
 unsigned long bump_pointer = (unsigned long) &__heap_base;
 
-void *malloc(unsigned long n) {
+export void *malloc(unsigned long n) {
 	unsigned long r = bump_pointer;
 	bump_pointer += n;
 	return (void *) r;
@@ -22,7 +24,7 @@ void *memset(void *s, int c, size_t n) {
 	return s;
 }
 
-void *calloc(size_t n, size_t size) {
+export void *calloc(size_t n, size_t size) {
 	void *ptr = malloc(n * size);
 	// only fill if it's not NULL
 	if (ptr) {

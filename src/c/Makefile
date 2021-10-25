@@ -1,5 +1,5 @@
 CC     = clang
-CFLAGS = -Wall -Wextra -Werror -Wpedantic --target=wasm32 -O3 -flto -nostdlib -I/usr/include
+CFLAGS = -Wall -Wextra -Werror -Wpedantic --target=wasm32 -O3 -flto -nostdlib -I/usr/include -mbulk-memory
 LD     = wasm-ld
 LFLAGS = --no-entry --export-dynamic --lto-O3
 OBJS   = huffman.o node.o pq.o stdlib.o

@@ -17,10 +17,7 @@ export void *malloc(size_t n) {
 }
 
 void *memset(void *s, int c, size_t n) {
-	char *char_ptr = (char *) s;
-	for (size_t i = 0; i < n; i += 1) {
-		char_ptr[i] = c;
-	}
+	__builtin_memset(s, c, n);
 	return s;
 }
 

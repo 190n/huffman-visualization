@@ -16,7 +16,7 @@ async function handleInput(tdWidth: number) {
 	canvas.height = canvas.parentElement!.clientHeight;
 
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	const levelHeight = (canvas.height - 10) / (getTreeDepth(tree) - 1);
+	const levelHeight = Math.min((canvas.height - 10) / (getTreeDepth(tree) - 1), 80);
 
 	for (const [_, path] of inOrderTraverse(tree)) {
 		const x = getNodeX(path) * (canvas.width - 10) + 5,

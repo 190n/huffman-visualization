@@ -24,4 +24,6 @@ bool dequeue(PriorityQueue *q, Node **n);
 
 void pq_print(PriorityQueue *q);
 
+Node **pq_items(PriorityQueue *q);
+
 #endif

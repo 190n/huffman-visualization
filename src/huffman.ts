@@ -11,15 +11,20 @@ interface HuffmanExports {
 	calloc: (n: number, size: number) => number;
 }
 
-export type Path = (0|1)[];
+type Path = (0|1)[];
 
-export async function buildTree(hist: Map<number, number>): Promise<Node[]> {
-	const trees: Node[] = [];
+export async function buildTree(hist: Map<number, number>): Promise<Node[][]> {
+	const snapshots: Node[][] = [];
 
 	const exports = await init({
 		env: {
-			save_tree_snapshot(treePtr: number) {
-				trees.push(unmarshalNode(exports.memory.buffer, treePtr));
+			save_tree_snapshot(nodesPtr: number, n: number) {
+				const nodePtrs = new Uint32Array(exports.memory.buffer, nodesPtr, n),
+					nodes: Node[] = [];
+				for (let i = 0; i < n; i += 1) {
+					nodes.push(unmarshalNode(exports.memory.buffer, nodePtrs[i]));
+				}
+				snapshots.push(nodes);
 			},
 		},
 	}) as unknown as HuffmanExports;
@@ -32,10 +37,10 @@ export async function buildTree(hist: Map<number, number>): Promise<Node[]> {
 	}
 
 	exports.build_tree(ptr);
-	return trees;
+	return snapshots;
 }
 
-export function getTreeDepth(root: Node): number {
+function getTreeDepth(root: Node): number {
 	if (root.left && root.right) {
 		return 1 + Math.max(getTreeDepth(root.left), getTreeDepth(root.right));
 	} else if (root.left) {
@@ -47,7 +52,7 @@ export function getTreeDepth(root: Node): number {
 	}
 }
 
-export function getNodeX(path: Path): number {
+function getNodeX(path: Path): number {
 	let x = 0.5;
 	for (const i in path) {
 		const step = path[i],
@@ -64,7 +69,7 @@ export function getNodeX(path: Path): number {
 	return x;
 }
 
-export function* postOrderTraverse(root: Node, basePath: Path = []): Generator<[Node, Path]> {
+function* postOrderTraverse(root: Node, basePath: Path = []): Generator<[Node, Path]> {
 	if (root.left) {
 		yield* postOrderTraverse(root.left, [...basePath, 0]);
 	}
@@ -74,26 +79,31 @@ export function* postOrderTraverse(root: Node, basePath: Path = []): Generator<[
 	yield [root, basePath];
 }
 
-export function getNodeXY(path: Path, width: number, levelHeight: number): [number, number] {
+function getNodeXY(path: Path, width: number, levelHeight: number): [number, number] {
 	return [getNodeX(path) * (width - NODE_WIDTH * 2) + NODE_WIDTH, path.length * levelHeight + NODE_HEIGHT];
 }
 
-export function drawNode(
+enum ConnectionType { None, Normal, Highlighted };
+
+function drawNode(
 	ctx: CanvasRenderingContext2D,
 	node: Node,
 	path: Path,
 	levelHeight: number,
 	width: number,
-	drawConnection: boolean = true,
-	bgColor: string = 'white',
+	connection: ConnectionType = ConnectionType.Normal,
+	highlight: boolean = false,
 ) {
 	const [x, y] = getNodeXY(path, width, levelHeight);
 
-	if (path.length > 0 && drawConnection) {
+	if (path.length > 0 && connection != ConnectionType.None) {
 		const parentPath = path.slice(0, -1),
 			[parentX, parentY] = getNodeXY(parentPath, width, levelHeight);
 
 		ctx.beginPath();
+		[ctx.strokeStyle, ctx.lineWidth] = connection == ConnectionType.Highlighted
+			? ['blue', 3]
+			: ['black', 0];
 		ctx.moveTo(parentX, parentY);
 		ctx.lineTo(x, y);
 		ctx.stroke();
@@ -101,7 +111,9 @@ export function drawNode(
 	}
 
 	ctx.beginPath();
-	ctx.fillStyle = bgColor;
+	[ctx.fillStyle, ctx.strokeStyle, ctx.lineWidth] = highlight
+		? ['#c0c0ff', 'blue', 3]
+		: ['white', 'black', 1];
 	ctx.rect(x - NODE_WIDTH, y - NODE_HEIGHT, NODE_WIDTH * 2, NODE_HEIGHT * 2);
 	ctx.fill();
 	ctx.stroke();
@@ -120,11 +132,20 @@ export function drawNode(
 	}
 }
 
+function findNode(root: Node, searchSymbol: number): Path|undefined {
+	for (const [{ symbol }, path] of postOrderTraverse(root)) {
+		if (symbol == searchSymbol) {
+			return path;
+		}
+	}
+
+	return undefined;
+}
+
 export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: number) {
 	const width = ctx.canvas.width / window.devicePixelRatio,
 	height = ctx.canvas.height / window.devicePixelRatio;
 
-	console.log(`drawTree dpr=${window.devicePixelRatio} w=${width} h=${height}`);
 	ctx.resetTransform();
 	ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 	ctx.clearRect(0, 0, width, height);
@@ -133,16 +154,19 @@ export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: 
 	let deferredNode: Node | undefined = undefined,
 		deferredPath: Path | undefined = undefined;
 
+	const highlightPath = typeof highlight == 'number' ? findNode(root, highlight) : undefined;
+
 	for (const [node, path] of postOrderTraverse(root)) {
 		if (node.symbol == highlight && !node.left && !node.right) {
 			deferredNode = node;
 			deferredPath = path;
 		}
 
-		drawNode(ctx, node, path, levelHeight, width);
+		const onHighlightedPath = highlightPath ? path.every((step, i) => highlightPath[i] == step) : false;
+		drawNode(ctx, node, path, levelHeight, width, onHighlightedPath ? ConnectionType.Highlighted : ConnectionType.Normal);
 	}
 
 	if (deferredNode && deferredPath) {
-		drawNode(ctx, deferredNode, deferredPath, levelHeight, width, false, '#c0c0ff');
+		drawNode(ctx, deferredNode, deferredPath, levelHeight, width, ConnectionType.None, true);
 	}
 }

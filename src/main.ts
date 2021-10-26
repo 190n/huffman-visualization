@@ -26,7 +26,8 @@ async function handleInput(tdWidth: number) {
 	const hist = buildHistogram(input.value);
 	displayHistogram(hist, tbody, tdWidth, symbol => redrawTree(symbol));
 	const trees = await buildTree(hist);
-	tree = trees[trees.length - 1];
+	console.log(trees);
+	tree = trees[trees.length - 1][0];
 	redrawTree();
 }
 

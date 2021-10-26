@@ -29,7 +29,20 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 			</section>
 			<!-- <section id="pq-section"></section> -->
 			<section id="huffman-section">
-				<canvas id="huffman" width="450" height="300"></canvas>
+				<div id="huffman-canvas-container">
+					<canvas id="huffman" width="450" height="300"></canvas>
+				</div>
+				<div id="controls-container">
+					<input type="range" min="0" max="1" value="1" step="1" id="scrubber">
+					<p id="legend">
+						<span id="legend-left">
+							Initial state (every node on its own)
+						</span>
+						<span id="legend-right">
+							Final tree
+						</span>
+					</p>
+				</div>
 			</section>
 		</main>
 		<script type="module" src="/src/main.ts"></script>

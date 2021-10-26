@@ -2,7 +2,7 @@ import init from './c/huffman.wasm';
 import { unmarshalNode, Node } from './node';
 import { characterDisplay } from './util';
 
-const NODE_WIDTH = 28, NODE_HEIGHT = 20;
+const NODE_WIDTH = 56, NODE_HEIGHT = 40;
 
 interface HuffmanExports {
 	memory: WebAssembly.Memory;
@@ -80,7 +80,7 @@ function* postOrderTraverse(root: Node, basePath: Path = []): Generator<[Node, P
 }
 
 function getNodeXY(path: Path, width: number, levelHeight: number): [number, number] {
-	return [getNodeX(path) * (width - NODE_WIDTH * 2) + NODE_WIDTH, path.length * levelHeight + NODE_HEIGHT];
+	return [getNodeX(path) * (width - NODE_WIDTH) + NODE_WIDTH / 2, path.length * levelHeight + NODE_HEIGHT / 2];
 }
 
 enum ConnectionType { None, Normal, Highlighted };
@@ -114,7 +114,7 @@ function drawNode(
 	[ctx.fillStyle, ctx.strokeStyle, ctx.lineWidth] = highlight
 		? ['#c0c0ff', 'blue', 3]
 		: ['white', 'black', 1];
-	ctx.rect(x - NODE_WIDTH, y - NODE_HEIGHT, NODE_WIDTH * 2, NODE_HEIGHT * 2);
+	ctx.rect(x - NODE_WIDTH / 2, y - NODE_HEIGHT / 2, NODE_WIDTH, NODE_HEIGHT);
 	ctx.fill();
 	ctx.stroke();
 	ctx.closePath();
@@ -142,14 +142,11 @@ function findNode(root: Node, searchSymbol: number): Path|undefined {
 	return undefined;
 }
 
-export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: number) {
+function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: number) {
 	const width = ctx.canvas.width / window.devicePixelRatio,
-	height = ctx.canvas.height / window.devicePixelRatio;
+		height = ctx.canvas.height / window.devicePixelRatio;
 
-	ctx.resetTransform();
-	ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-	ctx.clearRect(0, 0, width, height);
-	const levelHeight = Math.min((height - NODE_HEIGHT * 2) / (getTreeDepth(root) - 1), 80);
+	const levelHeight = Math.min((height - NODE_HEIGHT) / (getTreeDepth(root) - 1), 80);
 
 	let deferredNode: Node | undefined = undefined,
 		deferredPath: Path | undefined = undefined;
@@ -168,5 +165,17 @@ export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: 
 
 	if (deferredNode && deferredPath) {
 		drawNode(ctx, deferredNode, deferredPath, levelHeight, width, ConnectionType.None, true);
+	}
+}
+
+export function drawTrees(ctx: CanvasRenderingContext2D, trees: Node[], highlight?: number) {
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	ctx.resetTransform();
+	ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+	ctx.translate(-NODE_WIDTH * trees.length / 2, 0);
+
+	for (const tree of trees) {
+		ctx.translate(NODE_WIDTH, 0);
+		drawTree(ctx, tree, highlight);
 	}
 }

@@ -2,7 +2,7 @@ import init from './c/huffman.wasm';
 import { unmarshalNode, Node } from './node';
 import { characterDisplay } from './util';
 
-const X_PAD = 28, Y_PAD = 20;
+const NODE_WIDTH = 28, NODE_HEIGHT = 20;
 
 interface HuffmanExports {
 	memory: WebAssembly.Memory;
@@ -67,7 +67,7 @@ export function* postOrderTraverse(root: Node, basePath: Path = []): Generator<[
 }
 
 export function getNodeXY(path: Path, width: number, levelHeight: number): [number, number] {
-	return [getNodeX(path) * (width - X_PAD * 2) + X_PAD, path.length * levelHeight + Y_PAD];
+	return [getNodeX(path) * (width - NODE_WIDTH * 2) + NODE_WIDTH, path.length * levelHeight + NODE_HEIGHT];
 }
 
 export function drawNode(
@@ -75,14 +75,15 @@ export function drawNode(
 	node: Node,
 	path: Path,
 	levelHeight: number,
+	width: number,
 	drawConnection: boolean = true,
 	bgColor: string = 'white',
 ) {
-	const [x, y] = getNodeXY(path, ctx.canvas.width, levelHeight);
+	const [x, y] = getNodeXY(path, width, levelHeight);
 
 	if (path.length > 0 && drawConnection) {
 		const parentPath = path.slice(0, -1),
-			[parentX, parentY] = getNodeXY(parentPath, ctx.canvas.width, levelHeight);
+			[parentX, parentY] = getNodeXY(parentPath, width, levelHeight);
 
 		ctx.beginPath();
 		ctx.moveTo(parentX, parentY);
@@ -93,7 +94,7 @@ export function drawNode(
 
 	ctx.beginPath();
 	ctx.fillStyle = bgColor;
-	ctx.rect(x - X_PAD, y - Y_PAD, X_PAD * 2, Y_PAD * 2);
+	ctx.rect(x - NODE_WIDTH, y - NODE_HEIGHT, NODE_WIDTH * 2, NODE_HEIGHT * 2);
 	ctx.fill();
 	ctx.stroke();
 	ctx.closePath();
@@ -112,8 +113,14 @@ export function drawNode(
 }
 
 export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: Node) {
-	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-	const levelHeight = Math.min((ctx.canvas.height - Y_PAD * 2) / (getTreeDepth(root) - 1), 80);
+	const width = ctx.canvas.width / window.devicePixelRatio,
+	height = ctx.canvas.height / window.devicePixelRatio;
+	
+	console.log(`drawTree dpr=${window.devicePixelRatio} w=${width} h=${height}`);
+	ctx.resetTransform();
+	ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+	ctx.clearRect(0, 0, width, height);
+	const levelHeight = Math.min((height - NODE_HEIGHT * 2) / (getTreeDepth(root) - 1), 80);
 
 	let deferredNode: Node | undefined = undefined,
 		deferredPath: Path | undefined = undefined;
@@ -124,10 +131,10 @@ export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: 
 			deferredPath = path;
 		}
 
-		drawNode(ctx, node, path, levelHeight);
+		drawNode(ctx, node, path, levelHeight, width);
 	}
 
 	if (deferredNode && deferredPath) {
-		drawNode(ctx, deferredNode, deferredPath, levelHeight, false, 'lime');
+		drawNode(ctx, deferredNode, deferredPath, levelHeight, width, false, 'lime');
 	}
 }

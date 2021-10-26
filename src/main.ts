@@ -25,7 +25,8 @@ function redrawTree(highlightSymbol?: number) {
 async function handleInput(tdWidth: number) {
 	const hist = buildHistogram(input.value);
 	displayHistogram(hist, tbody, tdWidth, symbol => redrawTree(symbol));
-	tree = await buildTree(hist);
+	const trees = await buildTree(hist);
+	tree = trees[trees.length - 1];
 	redrawTree();
 }
 
@@ -40,8 +41,8 @@ const tdWidth = td1.getClientRects()[0].width;
 
 input.addEventListener('input', () => handleInput(tdWidth), false);
 
-tbody.addEventListener('pointerout', redrawTree, false);
+tbody.addEventListener('pointerout', () => redrawTree(), false);
 
 handleInput(tdWidth);
 
-window.addEventListener('resize', redrawTree, false);
+window.addEventListener('resize', () => redrawTree(), false);

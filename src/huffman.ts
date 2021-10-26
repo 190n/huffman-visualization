@@ -13,8 +13,16 @@ interface HuffmanExports {
 
 export type Path = (0|1)[];
 
-export async function buildTree(hist: Map<number, number>): Promise<Node> {
-	const exports = await init({ imports: {} }) as unknown as HuffmanExports;
+export async function buildTree(hist: Map<number, number>): Promise<Node[]> {
+	const trees: Node[] = [];
+
+	const exports = await init({
+		env: {
+			save_tree_snapshot(treePtr: number) {
+				trees.push(unmarshalNode(exports.memory.buffer, treePtr));
+			},
+		},
+	}) as unknown as HuffmanExports;
 	// allocate array to store histogram (256x uint32_t)
 	const ptr = exports.calloc(256, 4),
 		u32 = new Uint32Array(exports.memory.buffer, ptr, 256);
@@ -23,8 +31,8 @@ export async function buildTree(hist: Map<number, number>): Promise<Node> {
 		u32[i] = hist.get(i) ?? 0;
 	}
 
-	const treePtr = exports.build_tree(ptr);
-	return unmarshalNode(exports.memory.buffer, treePtr);
+	exports.build_tree(ptr);
+	return trees;
 }
 
 export function getTreeDepth(root: Node): number {

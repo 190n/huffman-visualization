@@ -1,11 +1,29 @@
+@font-face {
+	font-family: 'IBM Plex Sans';
+	font-weight: bold;
+	src: url('/fonts/IBMPlexSans-Bold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'IBM Plex Sans';
+	src: url('/fonts/IBMPlexSans-Regular.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Ubuntu Mono';
+	src: url('/fonts/UbuntuMono-Regular.woff2') format('woff2');
+}
+
 html {
 	height: 100%;
+	background-color: $colors_bg;
 }
 
 body {
 	height: 100%;
 	margin: 0;
 	font-family: $fonts_ui;
+	color: $colors_fg;
 }
 
 p, h1 {
@@ -39,6 +57,9 @@ section {
 
 	textarea {
 		resize: none;
+		font-family: $fonts_mono;
+		background-color: $colors_bg;
+		color: $colors_fg;
 	}
 }
 

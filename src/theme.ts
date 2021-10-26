@@ -1,7 +1,7 @@
 export default {
 	fonts: {
-		ui: 'Inter, sans-serif',
-		mono: 'monospace',
+		ui: '"IBM Plex Sans", sans-serif',
+		mono: '"Ubuntu Mono", monospace',
 	},
 	colors: {
 		fg: 'black',

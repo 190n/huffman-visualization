@@ -10,7 +10,10 @@
 	<body>
 		<main id="app">
 			<section id="input-section">
-				<h1>Input data</h1>
+				<div id="input-howto">
+					<h1>Input data</h1>
+					<a href="#" id="show-howto">How to use this</a>
+				</div>
 				<textarea id="input" spellcheck="false">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
 			</section>
@@ -48,6 +51,35 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 				</div>
 			</section>
 		</main>
+		<div id="howto-container">
+			<article id="howto">
+				<h1>Usage</h1>
+				<ul>
+					<li>
+						Type or paste data into the box on the left.
+					</li>
+					<li>
+						&ldquo;Histogram&rdquo; shows how many times each character in the input
+						occurs.
+					</li>
+					<li>
+						&ldquo;Huffman tree&rdquo; shows the Huffman tree that was created from the
+						histogram. Intermediate nodes display only the number of occurrences (summed
+						from their children). Leaf nodes display the character and the number of
+						occurrences.
+					</li>
+					<li>
+						The slider below the tree lets you view states from as the tree was being
+						built (when there were multiple trees or some nodes that weren&rsquo;t in
+						any tree yet). The display of multiple trees is a work-in-progress.
+					</li>
+				</ul>
+				<p id="buttons">
+					<button id="close">Close</button>
+					<button id="dont-show">Don&rsquo;t show again</button>
+				</p>
+			</article>
+		</div>
 		<script type="module" src="/src/main.ts"></script>
 	</body>
 </html>

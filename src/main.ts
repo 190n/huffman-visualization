@@ -6,7 +6,8 @@ const input = document.getElementById('input') as HTMLTextAreaElement,
 	tbody = document.getElementById('histogram')!,
 	canvas = document.getElementById('huffman') as HTMLCanvasElement,
 	ctx = canvas.getContext('2d')!,
-	scrubber = document.getElementById('scrubber') as HTMLInputElement;
+	scrubber = document.getElementById('scrubber') as HTMLInputElement,
+	howto = document.getElementById('howto-container')!;
 
 let snapshots: Node[][]|undefined = undefined;
 let whichSnapshot = 0;
@@ -55,3 +56,21 @@ scrubber.addEventListener('mousemove', () => {
 	whichSnapshot = parseInt(scrubber.value);
 	redrawTrees();
 }, false);
+
+document.getElementById('close')!.addEventListener('click', () => {
+	howto.classList.remove('visible');
+}, false);
+
+document.getElementById('dont-show')!.addEventListener('click', () => {
+	howto.classList.remove('visible');
+	window.localStorage.setItem('dont-show-howto', 'true');
+}, false);
+
+document.getElementById('show-howto')!.addEventListener('click', () => {
+	howto.classList.add('visible');
+	window.localStorage.removeItem('dont-show-howto');
+}, false);
+
+if (!window.localStorage.getItem('dont-show-howto')) {
+	howto.classList.add('visible');
+}

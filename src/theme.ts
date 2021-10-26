@@ -14,5 +14,6 @@ export default {
 		trHover: '#d0d0d0',
 		trZebra: '#e0e0e0',
 		trZebraHover: '#b0b0b0',
+		modalCover: '#00000080',
 	},
 };

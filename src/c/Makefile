@@ -1,7 +1,7 @@
 CC     = clang
 CFLAGS = -Wall -Wextra -Werror -Wpedantic --target=wasm32 -O3 -flto -nostdlib -I/usr/include -mbulk-memory
 LD     = wasm-ld
-LFLAGS = --no-entry --export-dynamic --lto-O3
+LFLAGS = --no-entry --export-dynamic --lto-O3 --allow-undefined-file=imports.syms
 OBJS   = huffman.o node.o pq.o stdlib.o
 
 all: huffman.wasm

@@ -1,6 +1,7 @@
 import init from './c/huffman.wasm';
 import { unmarshalNode, Node } from './node';
 import { characterDisplay } from './util';
+import theme from './theme';
 
 const NODE_WIDTH = 56, NODE_HEIGHT = 40;
 
@@ -102,8 +103,8 @@ function drawNode(
 
 		ctx.beginPath();
 		[ctx.strokeStyle, ctx.lineWidth] = connection == ConnectionType.Highlighted
-			? ['blue', 3]
-			: ['black', 0];
+			? [theme.colors.blue, 3]
+			: [theme.colors.fg, 0];
 		ctx.moveTo(parentX, parentY);
 		ctx.lineTo(x, y);
 		ctx.stroke();
@@ -112,15 +113,15 @@ function drawNode(
 
 	ctx.beginPath();
 	[ctx.fillStyle, ctx.strokeStyle, ctx.lineWidth] = highlight
-		? ['#c0c0ff', 'blue', 3]
-		: ['white', 'black', 1];
+		? [theme.colors.blue25Opaque, theme.colors.blue, 3]
+		: [theme.colors.bg, theme.colors.fg, 1];
 	ctx.rect(x - NODE_WIDTH / 2, y - NODE_HEIGHT / 2, NODE_WIDTH, NODE_HEIGHT);
 	ctx.fill();
 	ctx.stroke();
 	ctx.closePath();
 
-	ctx.fillStyle = 'black';
-	ctx.font = '16px monospace';
+	ctx.fillStyle = theme.colors.fg;
+	ctx.font = `16px ${theme.fonts.mono}`;
 	ctx.textBaseline = 'middle';
 	ctx.textAlign = 'center';
 

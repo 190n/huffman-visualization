@@ -1,6 +1,7 @@
 import utf8 from 'utf8';
 
 import { characterDisplay } from './util';
+import theme from './theme';
 
 export function buildHistogram(input: string): Map<number, number> {
 	const encoded = utf8.encode(input),
@@ -41,7 +42,7 @@ export function displayHistogram(
 
 		occurrences.textContent = histogram.get(byte)!.toString();
 		const fraction = histogram.get(byte)! / histogram.get(sortedKeys[0])!;
-		occurrences.style.boxShadow = `-${fraction * tdWidth}px 0 0 #0000ff40 inset`;
+		occurrences.style.boxShadow = `-${fraction * tdWidth}px 0 0 ${theme.colors.blue25} inset`;
 		tbody.appendChild(tr);
 
 		if (hover) {

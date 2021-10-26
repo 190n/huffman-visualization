@@ -12,6 +12,10 @@ p, h1 {
 	margin: 0;
 }
 
+h1 {
+	margin-bottom: 8px;
+}
+
 section {
 	padding: 8px;
 }
@@ -47,6 +51,11 @@ section {
 	display: flex;
 	flex-direction: column;
 
+	h1 {
+		padding: 8px;
+		margin: 0;
+	}
+
 	table {
 		width: 100%;
 		table-layout: fixed;
@@ -55,7 +64,8 @@ section {
 		thead th {
 			width: 50%;
 			padding: 4px 0;
-			border-bottom: thin solid black;
+			border: solid black;
+			border-width: thin 0;
 		}
 
 		tbody {

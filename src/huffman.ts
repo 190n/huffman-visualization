@@ -112,10 +112,10 @@ export function drawNode(
 	}
 }
 
-export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: Node) {
+export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: number) {
 	const width = ctx.canvas.width / window.devicePixelRatio,
 	height = ctx.canvas.height / window.devicePixelRatio;
-	
+
 	console.log(`drawTree dpr=${window.devicePixelRatio} w=${width} h=${height}`);
 	ctx.resetTransform();
 	ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
@@ -126,7 +126,7 @@ export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: 
 		deferredPath: Path | undefined = undefined;
 
 	for (const [node, path] of postOrderTraverse(root)) {
-		if (node.symbol == highlight?.symbol) {
+		if (node.symbol == highlight && !node.left && !node.right) {
 			deferredNode = node;
 			deferredPath = path;
 		}
@@ -135,6 +135,6 @@ export function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: 
 	}
 
 	if (deferredNode && deferredPath) {
-		drawNode(ctx, deferredNode, deferredPath, levelHeight, width, false, 'lime');
+		drawNode(ctx, deferredNode, deferredPath, levelHeight, width, false, '#c0c0ff');
 	}
 }

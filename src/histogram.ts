@@ -20,7 +20,12 @@ export function buildHistogram(input: string): Map<number, number> {
 	return histogram;
 }
 
-export function displayHistogram(histogram: Map<number, number>, tbody: Element, tdWidth: number) {
+export function displayHistogram(
+	histogram: Map<number, number>,
+	tbody: Element,
+	tdWidth: number,
+	hover?: (symbol: number) => void,
+) {
 	// remove all current contents
 	tbody.replaceChildren();
 	const sortedKeys = [...histogram.keys()].sort((a, b) => histogram.get(b)! - histogram.get(a)!);
@@ -38,5 +43,9 @@ export function displayHistogram(histogram: Map<number, number>, tbody: Element,
 		const fraction = histogram.get(byte)! / histogram.get(sortedKeys[0])!;
 		occurrences.style.boxShadow = `-${fraction * tdWidth}px 0 0 #0000ff40 inset`;
 		tbody.appendChild(tr);
+
+		if (hover) {
+			tr.addEventListener('pointerover', () => hover(byte), false);
+		}
 	}
 }

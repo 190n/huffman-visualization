@@ -9,7 +9,7 @@ const input = document.getElementById('input') as HTMLTextAreaElement,
 
 let tree: Node|undefined = undefined;
 
-function redrawTree() {
+function redrawTree(highlightSymbol?: number) {
 	const displayWidth = canvas.parentElement!.clientWidth,
 		displayHeight = canvas.parentElement!.clientHeight;
 	canvas.width = displayWidth * window.devicePixelRatio;
@@ -18,13 +18,13 @@ function redrawTree() {
 	canvas.style.height = `${displayHeight}px`;
 
 	if (tree) {
-		drawTree(ctx, tree, { frequency: 5, symbol: 98 });
+		drawTree(ctx, tree, highlightSymbol);
 	}
 }
 
 async function handleInput(tdWidth: number) {
 	const hist = buildHistogram(input.value);
-	displayHistogram(hist, tbody, tdWidth);
+	displayHistogram(hist, tbody, tdWidth, symbol => redrawTree(symbol));
 	tree = await buildTree(hist);
 	redrawTree();
 }
@@ -39,6 +39,8 @@ tbody.appendChild(tr);
 const tdWidth = td1.getClientRects()[0].width;
 
 input.addEventListener('input', () => handleInput(tdWidth), false);
+
+tbody.addEventListener('pointerout', redrawTree, false);
 
 handleInput(tdWidth);
 

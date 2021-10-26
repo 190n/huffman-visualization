@@ -42,7 +42,7 @@ export function displayHistogram(
 
 		occurrences.textContent = histogram.get(byte)!.toString();
 		const fraction = histogram.get(byte)! / histogram.get(sortedKeys[0])!;
-		occurrences.style.boxShadow = `-${fraction * tdWidth}px 0 0 ${theme.colors.blue25} inset`;
+		occurrences.style.boxShadow = `-${fraction * tdWidth}px 0 ${theme.colors.blue25} inset`;
 		tbody.appendChild(tr);
 
 		if (hover) {

@@ -57,14 +57,14 @@ section {
 
 	#input {
 		resize: none;
-		font-family: $fonts_mono;
+		font: 1em $fonts_mono;
 		background-color: $colors_bg;
 		color: $colors_fg;
 		flex-grow: 1;
 		margin: 0;
 		padding: 8px;
 		border: thin solid $colors_fg;
-		border-radius: 3px;
+		border-radius: 4px;
 	
 		&:focus {
 			outline: none;
@@ -76,12 +76,15 @@ section {
 	#input-howto {
 		display: flex;
 
-		a {
+		#links {
 			flex-grow: 1;
 			text-align: right;
 			align-self: flex-end;
 			margin-bottom: 8px;
-			color: $colors_blue;
+
+			a {
+				color: $colors_blue;
+			}
 		}
 	}
 }
@@ -169,7 +172,7 @@ section {
 	}
 
 	#scrubber {
-		width: 100%;
+		width: calc(100% - 2px);
 	}
 
 	#legend {
@@ -205,6 +208,43 @@ section {
 
 		#buttons {
 			text-align: right;
+			height: 2em;
+			display: flex;
+			align-items: flex-start;
+			justify-content: end;
+
+			button {
+				display: inline-block;
+				appearance: none;
+				border: none;
+				font: 1em $fonts_ui;
+				height: 2em;
+				line-height: calc(2em - 8px);
+				overflow: clip;
+				box-sizing: border-box;
+				color: $colors_fg;
+				padding: 4px 8px;
+				margin: 0 0 0 8px;
+				border-radius: 4px;
+				background-color: $colors_lightGray;
+				box-shadow: 0 -2px $colors_buttonBottom inset;
+				cursor: pointer;
+
+				&#dont-show {
+					background-color: $colors_blue;
+					color: $colors_bg;
+				}
+
+				&:hover {
+					background-image: linear-gradient($colors_buttonHover, $colors_buttonHover);
+				}
+
+				&:active {
+					box-shadow: 0 2px $colors_buttonBottom inset;
+					background-image: linear-gradient($colors_buttonActive, $colors_buttonActive);
+					padding: 6px 8px 2px;
+				}
+			}
 		}
 	}
 }

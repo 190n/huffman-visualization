@@ -16,7 +16,8 @@ for (const [k, v] of joinedKV(theme)) {
 	variables += `\$${k}: ${v};`;
 }
 
-module.exports = defineConfig({
+export default defineConfig({
+	base: '/huffman-visualization/',
 	css: {
 		preprocessorOptions: {
 			scss: {

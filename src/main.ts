@@ -78,6 +78,12 @@ if (!window.localStorage.getItem('dont-show-howto')) {
 	howto.classList.add('visible');
 }
 
+document.addEventListener('keyup', e => {
+	if (e.key == 'Escape') {
+		howto.classList.remove('visible');
+	}
+}, false);
+
 function toStart() {
 	whichSnapshot = 0;
 	scrubber.value = '0';

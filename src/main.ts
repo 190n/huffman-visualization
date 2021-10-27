@@ -77,3 +77,42 @@ document.getElementById('show-howto')!.addEventListener('click', () => {
 if (!window.localStorage.getItem('dont-show-howto')) {
 	howto.classList.add('visible');
 }
+
+function toStart() {
+	whichSnapshot = 0;
+	scrubber.value = '0';
+	redrawTrees();
+}
+
+function stepBack() {
+	whichSnapshot = Math.max(0, whichSnapshot - 1);
+	scrubber.value = whichSnapshot.toString();
+	redrawTrees();
+}
+
+function stepForward() {
+	whichSnapshot = Math.min(snapshots!.length - 1, whichSnapshot + 1);
+	scrubber.value = whichSnapshot.toString();
+	redrawTrees();
+}
+
+function toEnd() {
+	whichSnapshot = snapshots!.length - 1;
+	scrubber.value = whichSnapshot.toString();
+	redrawTrees();
+}
+
+function filterEnterOrSpace(f: () => void, e: KeyboardEvent) {
+	if (e.key == 'Enter' || e.key == ' ') {
+		f();
+	}
+}
+
+document.getElementById('to-start')!.addEventListener('click', toStart, false);
+document.getElementById('to-start')!.addEventListener('keypress', filterEnterOrSpace.bind(null, toStart), false);
+document.getElementById('step-back')!.addEventListener('click', stepBack, false);
+document.getElementById('step-back')!.addEventListener('keypress', filterEnterOrSpace.bind(null, stepBack), false);
+document.getElementById('step-forward')!.addEventListener('click', stepForward, false);
+document.getElementById('step-forward')!.addEventListener('keypress', filterEnterOrSpace.bind(null, stepForward), false);
+document.getElementById('to-end')!.addEventListener('click', toEnd, false);
+document.getElementById('to-end')!.addEventListener('keypress', filterEnterOrSpace.bind(null, toEnd), false);

@@ -177,9 +177,31 @@ section {
 
 	#legend {
 		display: flex;
+		user-select: none;
+
+		span {
+			width: calc(100%/3);
+		}
+
+		#legend-middle {
+			text-align: center;
+
+			a {
+				color: $colors_fg;
+				text-decoration: none;
+				letter-spacing: -0.25ch;
+				padding: 0 16px;
+
+				&:focus {
+					outline: none;
+					text-shadow: 0 0 4px $colors_blue;
+					color: $colors_blue;
+				}
+			}
+		}
+
 		#legend-right {
 			text-align: right;
-			flex-grow: 1;
 		}
 	}
 }

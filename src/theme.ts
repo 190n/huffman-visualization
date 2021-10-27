@@ -16,7 +16,7 @@ export default {
 		trZebraHover: '#b0b0b0',
 		modalCover: '#00000080',
 		lightGray: '#e0e0e0',
-		buttonBottom: 'black',
+		buttonBottom: '#00000080',
 		buttonHover: '#00000020',
 		buttonActive: '#00000040',
 	},

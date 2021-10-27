@@ -145,8 +145,7 @@ function findNode(root: Node, searchSymbol: number): Path|undefined {
 
 interface DrawnTree {
 	image: ImageData;
-	numNodes: number;
-	rootSymbol: number;
+	rootFrequency: number;
 }
 
 function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: number): DrawnTree {
@@ -160,7 +159,7 @@ function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: number)
 
 	const highlightPath = typeof highlight == 'number' ? findNode(root, highlight) : undefined;
 
-	let minX = Infinity, maxX = -Infinity, numNodes = 0;
+	let minX = Infinity, maxX = -Infinity;
 
 	for (const [node, path] of postOrderTraverse(root)) {
 		if (node.symbol == highlight && !node.left && !node.right) {
@@ -178,8 +177,6 @@ function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: number)
 		if (x > maxX) {
 			maxX = x;
 		}
-
-		numNodes += 1;
 	}
 
 	if (deferredNode && deferredPath) {
@@ -200,8 +197,7 @@ function drawTree(ctx: CanvasRenderingContext2D, root: Node, highlight?: number)
 
 	return {
 		image: ctx.getImageData(sx, sy, sw, sh),
-		numNodes,
-		rootSymbol: root.symbol,
+		rootFrequency: root.frequency,
 	};
 }
 
@@ -211,12 +207,7 @@ export function drawTrees(ctx: CanvasRenderingContext2D, trees: Node[], highligh
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 		ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
 		return drawTree(ctx, tree, highlight);
-	}).sort((a, b) => {
-		const aKey = -a.numNodes * 256 + a.rootSymbol,
-			bKey = -b.numNodes * 256 + b.rootSymbol;
-
-		return aKey - bKey;
-	});
+	}).sort((a, b) => a.rootFrequency - b.rootFrequency);
 
 	const totalWidth = drawnTrees.reduce<number>((prevWidth, curr) => prevWidth + curr.image.width, 0);
 	ctx.canvas.width = totalWidth;

@@ -1,5 +1,0 @@
-code.c
-huffman.c
-node.c
-pq.c
-*.o

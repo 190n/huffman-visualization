@@ -52,10 +52,13 @@ handleInput(tdWidth);
 
 window.addEventListener('resize', () => redrawTrees(), false);
 
-scrubber.addEventListener('mousemove', () => {
+function scrub() {
 	whichSnapshot = parseInt(scrubber.value);
 	redrawTrees();
-}, false);
+}
+
+scrubber.addEventListener('mousemove', scrub, false);
+scrubber.addEventListener('change', scrub, false);
 
 document.getElementById('close')!.addEventListener('click', () => {
 	howto.classList.remove('visible');

@@ -1,10 +1,10 @@
 // malloc and free are by Surma from https://surma.dev/things/c-to-webassembly/
 // CC BY 4.0
 
+#include "defines.h"
+
 #include <malloc.h>
 #include <string.h>
-
-#include "defines.h"
 
 extern unsigned char __heap_base;
 

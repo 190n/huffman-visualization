@@ -1,3 +1,5 @@
+**This repository contains some code from CSE 13S, as well as some code I wrote which is not related to the class. If you are a student in CSE 13S, do not view `src/c/huffman.c`, `src/c/pq.c`, or `src/c/node.c`. If you copy from one of those files, you will be caught.**
+
 huffman-visualization
 =====================
 

@@ -1,4 +1,4 @@
-import init from './c/huffman.wasm';
+import init from './zig/zig-out/lib/huffman.wasm';
 import { unmarshalNode, Node } from './node';
 import { characterDisplay } from './util';
 import theme from './theme';
@@ -7,9 +7,8 @@ const NODE_WIDTH = 56, NODE_HEIGHT = 40;
 
 interface HuffmanExports {
 	memory: WebAssembly.Memory;
-	build_tree: (hist: number) => number;
-	malloc: (n: number) => number;
-	calloc: (n: number, size: number) => number;
+	buildTree: (hist: number) => number;
+	histogram: WebAssembly.Global;
 }
 
 type Path = (0|1)[];
@@ -19,7 +18,7 @@ export async function buildTree(hist: Map<number, number>): Promise<Node[][]> {
 
 	const exports = await init({
 		env: {
-			save_tree_snapshot(nodesPtr: number, n: number) {
+			saveTreeSnapshot(nodesPtr: number, n: number) {
 				const nodePtrs = new Uint32Array(exports.memory.buffer, nodesPtr, n),
 					nodes: Node[] = [];
 				for (let i = 0; i < n; i += 1) {
@@ -29,15 +28,16 @@ export async function buildTree(hist: Map<number, number>): Promise<Node[][]> {
 			},
 		},
 	}) as unknown as HuffmanExports;
-	// allocate array to store histogram (256x uint32_t)
-	const ptr = exports.calloc(256, 4),
+
+	// store histogram in global
+	const ptr = exports.histogram.value,
 		u32 = new Uint32Array(exports.memory.buffer, ptr, 256);
 
 	for (let i = 0; i < 256; i += 1) {
 		u32[i] = hist.get(i) ?? 0;
 	}
 
-	exports.build_tree(ptr);
+	exports.buildTree(ptr);
 	return snapshots;
 }
 

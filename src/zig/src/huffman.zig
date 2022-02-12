@@ -9,7 +9,7 @@ const fbaAlloc = fba.allocator();
 
 extern fn saveTreeSnapshot(items: [*]*Node, size: usize) void;
 
-export fn buildTree(hist: [*]u8) ?*Node {
+export fn buildTree(hist: [*]u32) ?*Node {
     const q = PriorityQueue(*Node, node.nodeCompare).init(fbaAlloc, 256) catch return null;
     defer q.deinit();
 
@@ -39,3 +39,5 @@ export fn buildTree(hist: [*]u8) ?*Node {
     var root = q.dequeue().?;
     return root;
 }
+
+export const histogram: [256]u32 = undefined;

@@ -2,7 +2,7 @@ const std = @import("std");
 const Allocator = std.mem.Allocator;
 const Node = @import("./node.zig").Node;
 
-pub fn PriorityQueue(comptime T: type, comptime cmp: fn (T, T) i8) type {
+pub fn PriorityQueue(comptime T: type, comptime cmp: fn (T, T) std.math.Order) type {
     return struct {
         capacity: usize,
         tail: usize,
@@ -46,7 +46,7 @@ pub fn PriorityQueue(comptime T: type, comptime cmp: fn (T, T) i8) type {
         fn minChild(self: *const Self, first: usize, last: usize) usize {
             const left = 2 * first;
             const right = left + 1;
-            if (right <= last and cmp(self.items[right - 1], self.items[left - 1]) < 0) {
+            if (right <= last and cmp(self.items[right - 1], self.items[left - 1]) == .lt) {
                 return right;
             } else {
                 return left;
@@ -59,7 +59,7 @@ pub fn PriorityQueue(comptime T: type, comptime cmp: fn (T, T) i8) type {
             var great = self.minChild(parent, last);
 
             while (parent <= last / 2 and !found) {
-                if (cmp(self.items[parent - 1], self.items[great - 1]) > 0) {
+                if (cmp(self.items[parent - 1], self.items[great - 1]) == .gt) {
                     std.mem.swap(T, &self.items[parent - 1], &self.items[great - 1]);
                     parent = great;
                     great = self.minChild(parent, last);
@@ -78,7 +78,7 @@ pub fn PriorityQueue(comptime T: type, comptime cmp: fn (T, T) i8) type {
                 self.tail += 1;
                 self.items[current_index - 1] = x;
                 // bubble up
-                while (current_index > 1 and cmp(self.items[current_index - 1], self.items[current_index / 2 - 1]) < 0) {
+                while (current_index > 1 and cmp(self.items[current_index - 1], self.items[current_index / 2 - 1]) == .lt) {
                     std.mem.swap(T, &self.items[current_index - 1], &self.items[current_index / 2 - 1]);
                     current_index /= 2;
                 }

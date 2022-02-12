@@ -9,10 +9,4 @@ pub fn build(b: *std.build.Builder) void {
     lib.setBuildMode(mode);
     lib.setTarget(.{ .cpu_arch = .wasm32, .os_tag = .freestanding });
     lib.install();
-
-    const main_tests = b.addTest("src/test.zig");
-    main_tests.setBuildMode(mode);
-
-    const test_step = b.step("test", "Run library tests");
-    test_step.dependOn(&main_tests.step);
 }

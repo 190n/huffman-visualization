@@ -1,4 +1,6 @@
-const Allocator = @import("std").mem.Allocator;
+const std = @import("std");
+const Allocator = std.mem.Allocator;
+const Order = std.math.Order;
 
 pub const Node = extern struct {
     left: ?*Node,
@@ -23,12 +25,6 @@ pub fn nodeJoin(alloc: Allocator, left: *Node, right: *Node) !*Node {
     return n;
 }
 
-pub fn nodeCompare(a: *const Node, b: *const Node) i8 {
-    if (a.frequency > b.frequency) {
-        return 1;
-    } else if (a.frequency < b.frequency) {
-        return -1;
-    } else {
-        return 0;
-    }
+pub fn nodeCompare(a: *const Node, b: *const Node) Order {
+    return std.math.order(a.frequency, b.frequency);
 }

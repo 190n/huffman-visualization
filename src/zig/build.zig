@@ -7,6 +7,9 @@ pub fn build(b: *std.build.Builder) void {
 
     const lib = b.addSharedLibrary("huffman", "src/huffman.zig", .unversioned);
     lib.setBuildMode(mode);
-    lib.setTarget(.{ .cpu_arch = .wasm32, .os_tag = .freestanding });
+    lib.setTarget(.{
+        .cpu_arch = .wasm32,
+        .os_tag = .freestanding,
+    });
     lib.install();
 }

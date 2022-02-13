@@ -1,16 +1,16 @@
 const std = @import("std");
 const node = @import("./node.zig");
-const Node = node.Node;
-const PriorityQueue = @import("./pq.zig").PriorityQueue;
+const PriorityQueue = std.PriorityQueue;
 
 var buf: [65536]u8 = undefined;
 var fba = std.heap.FixedBufferAllocator.init(&buf);
 const fbaAlloc = fba.allocator();
 
-extern fn saveTreeSnapshot(items: [*]*Node, size: usize) void;
+// imported from wasm environment
+extern fn saveTreeSnapshot(items: [*]*node.Node, size: usize) void;
 
-export fn buildTree(hist: [*]u32) ?*Node {
-    const q = PriorityQueue(*Node, node.nodeCompare).init(fbaAlloc, 256) catch return null;
+export fn buildTree(hist: [*]u32) ?*node.Node {
+    var q = PriorityQueue(*node.Node, void, node.nodeCompare).init(fbaAlloc, {});
     defer q.deinit();
 
     var c: u16 = 0;
@@ -18,25 +18,25 @@ export fn buildTree(hist: [*]u32) ?*Node {
         if (hist[c] > 0) {
             // enqueue a node for this character
             const n = node.nodeCreate(fbaAlloc, @intCast(u8, c), hist[c]) catch return null;
-            q.enqueue(n) catch unreachable;
+            q.add(n) catch unreachable;
         }
     }
 
-    saveTreeSnapshot(q.items.ptr, q.size());
+    saveTreeSnapshot(q.items.ptr, q.count());
 
-    while (q.size() >= 2) {
+    while (q.count() >= 2) {
         // dequeue 2 nodes
-        var left = q.dequeue().?;
-        var right = q.dequeue().?;
+        var left = q.remove();
+        var right = q.remove();
         // join them
         var joined = node.nodeJoin(fbaAlloc, left, right) catch unreachable;
         // enqueue the joined one
-        q.enqueue(joined) catch unreachable;
-        saveTreeSnapshot(q.items.ptr, q.size());
+        q.add(joined) catch unreachable;
+        saveTreeSnapshot(q.items.ptr, q.count());
     }
 
     // get the sole node
-    var root = q.dequeue().?;
+    var root = q.remove();
     return root;
 }
 

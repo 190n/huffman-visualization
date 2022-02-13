@@ -9,6 +9,4 @@ This is a visualizaiton of [Huffman coding](https://en.wikipedia.org/wiki/Huffma
 
 Run `yarn dev` to start the development server, then open http://localhost:3000/huffman-visualization/.
 
-~~To compile the WASM module, run `zig build -Drelease-small` from `src/zig`.~~
-
-The Zig source code is currently unavailable to discourage cheating in the class that this visualization was made for.
+To compile the WASM module, run `zig build -Drelease-small` from `src/zig`.

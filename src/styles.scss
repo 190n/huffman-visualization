@@ -270,3 +270,11 @@ section {
 		}
 	}
 }
+
+code {
+	font-size: inherit;
+	font-family: $fonts_mono;
+	background-color: $colors_lightGray;
+	padding: 2px;
+	border-radius: 2px;
+}

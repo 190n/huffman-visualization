@@ -78,7 +78,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 					<li>
 						&ldquo;Histogram&rdquo; shows how many times each character in the input
 						occurs. You can hover over a row of this table to highlight the
-						corresponding node in the tree.
+						corresponding node in the tree. The <code>0x00</code> and <code>0xff</code>
+						entries are only added to ensure that there are at least two entries in the
+						histogram, as the main loop while building the tree has to be able to
+						dequeue two nodes.
 					</li>
 					<li>
 						&ldquo;Huffman tree&rdquo; shows the Huffman tree that was created from the

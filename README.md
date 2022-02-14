@@ -1,9 +1,9 @@
-**This repository contains some code from CSE 13S, as well as some code I wrote which is not related to the class. If you are a student in CSE 13S, do not view `src/c/huffman.c`, `src/c/pq.c`, or `src/c/node.c`. If you copy from one of those files, you will be caught.**
+**If you're a student in CSE 13S, don't look at or attempt to copy from any of the Zig source files. You'll be caught.** Feel free to look at the TypeScript code if you want to see how to use WebAssembly modules and make janky visualizations.
 
 huffman-visualization
 =====================
 
-This is a visualizaiton of [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding). It builds the Huffman tree using a WASM module (compiled from C code) and displays it using HTML5 Canvas. It also shows the raw histogram.
+This is a visualizaiton of [Huffman coding](https://en.wikipedia.org/wiki/Huffman_coding). It builds the Huffman tree using a WASM module (compiled from Zig code) and displays it using HTML5 Canvas. It also shows the raw histogram.
 
 ## Development
 

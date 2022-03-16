@@ -25,7 +25,6 @@ pub fn nodeJoin(alloc: Allocator, left: *Node, right: *Node) !*Node {
     return n;
 }
 
-pub fn nodeCompare(context: void, a: *const Node, b: *const Node) Order {
-    _ = context;
+pub fn nodeCompare(a: *const Node, b: *const Node) Order {
     return std.math.order(a.frequency, b.frequency);
 }

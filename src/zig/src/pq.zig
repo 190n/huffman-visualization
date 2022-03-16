@@ -13,16 +13,13 @@ pub fn PriorityQueue(comptime T: type, comptime cmp: fn (T, T) std.math.Order) t
 
         pub fn init(allocator: Allocator, capacity: usize) !*Self {
             var q: *Self = try allocator.create(Self);
-            q.capacity = capacity;
-            q.tail = 0;
-            q.allocator = allocator;
-            if (allocator.alloc(T, capacity)) |items| {
-                q.items = items;
-            } else |err| {
-                // clean up what's already initialized
-                allocator.destroy(q);
-                return err;
-            }
+            errdefer allocator.destroy(q);
+            q.* = .{
+                .capacity = capacity,
+                .tail = 0,
+                .allocator = allocator,
+                .items = try allocator.alloc(T, capacity),
+            };
             return q;
         }
 

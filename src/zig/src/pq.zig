@@ -99,3 +99,68 @@ pub fn PriorityQueue(comptime T: type, comptime cmp: fn (T, T) std.math.Order) t
         }
     };
 }
+
+// test PriorityQueue with numbers
+fn i32Compare(a: i32, b: i32) std.math.Order {
+    if (a < b) {
+        return .lt;
+    } else if (a > b) {
+        return .gt;
+    } else {
+        return .eq;
+    }
+}
+
+const expect = std.testing.expect;
+const expectEqual = std.testing.expectEqual;
+const expectError = std.testing.expectError;
+
+test "PriorityQueue.init" {
+    var pq = try PriorityQueue(i32, i32Compare).init(std.testing.allocator, 10);
+    defer pq.deinit();
+    try expectEqual(@as(usize, 10), pq.capacity);
+    try expectEqual(@as(usize, 0), pq.size());
+    try expect(pq.empty());
+    try expect(!pq.full());
+}
+
+test "PriorityQueue operations" {
+    var pq = try PriorityQueue(i32, i32Compare).init(std.testing.allocator, 10);
+    defer pq.deinit();
+
+    const nums = [_]i32{5, 3, 6, 7, 10, 8};
+    var sorted = nums;
+    std.sort.sort(i32, &sorted, {}, comptime std.sort.asc(i32));
+
+    for (nums) |n| {
+        try pq.enqueue(n);
+    }
+
+    try expectEqual(nums.len, pq.size());
+
+    for (sorted) |n| {
+        try expectEqual(n, pq.dequeue().?);
+    }
+
+    try expect(pq.empty());
+}
+
+
+test "full and empty PriorityQueue" {
+    var pq = try PriorityQueue(i32, i32Compare).init(std.testing.allocator, 10);
+    defer pq.deinit();
+
+    var i: i32 = 0;
+    while (i < pq.capacity) : (i += 1) {
+        try pq.enqueue(i);
+    }
+
+    try expect(pq.full());
+    try expectError(error.Full, pq.enqueue(50));
+
+    while (!pq.empty()) {
+        _ = pq.dequeue();
+    }
+
+    try expectEqual(@as(?i32, null), pq.dequeue());
+}

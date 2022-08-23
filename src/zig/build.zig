@@ -6,6 +6,7 @@ pub fn build(b: *std.build.Builder) void {
     const mode = b.standardReleaseOptions();
 
     const lib = b.addSharedLibrary("huffman", "src/huffman.zig", .unversioned);
+    lib.strip = true;
     lib.setBuildMode(mode);
     lib.setTarget(.{
         .cpu_arch = .wasm32,
